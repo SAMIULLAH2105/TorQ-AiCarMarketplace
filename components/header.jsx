@@ -52,7 +52,7 @@ const Header = async ({ isAdminPage = false }) => {
                 </Link>
               )}
               <a href="/saved-cars">
-                <Button className="flex items-center gap-2">
+                <Button className="flex items-center gap-2" variant="outline">
                   <Heart size={18} />
                   <span className="hidden md:inline">Saved Cars</span>
                 </Button>

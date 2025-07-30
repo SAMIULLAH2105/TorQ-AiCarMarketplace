@@ -113,14 +113,14 @@ const HomeSearch = () => {
   return (
     <div>
       <form onSubmit={handleTextSearch}>
-        <div className="relative flex items-center">
+        <div className="relative flex items-center mx-3 sm:mx-0">
           <Search className="absolute left-3 w-5 h-5" />
           <Input
             type="text"
             placeholder="Enter make, model, or use our AI Image Search..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10 pr-12 py-6 w-full rounded-full border-gray-300 bg-white/95 backdrop-blur-sm"
+            className="pl-10 pr-12 py-6 w-full rounded-full border-gray-300 bg-white/95 backdrop-blur-sm text-[10px]"
           />
 
           {/* Image Search Button */}

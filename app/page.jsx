@@ -20,7 +20,7 @@ export default async function Home() {
   return (
     <div className="pt-20 flex flex-col">
       {/* Hero */}
-      <section className="relativepy-16 md:py-28 dotted-background">
+      <section className="relative py-16 md:py-28 dotted-background">
         <div className="max-w-4xl mx-auto text-center">
           <div className="mb-8">
             <h1 className="text-5xl md:text-8xl mb-4 gradient-title">
@@ -32,14 +32,14 @@ export default async function Home() {
           </div>
 
           {/* Search */}
-          <HomeSearch />
+          <HomeSearch  className="mx-5"/>
         </div>
       </section>
 
-      <section className="py-12  mx-20">
+      <section className="py-12  mx-10 sm:mx-20 ">
         <div className="container mx-auto px-4 ">
           <div className="flex items-center justify-between  mb-8">
-            <h2 className="text-2xl font-bold">Featured Cars</h2>
+            <h2 className="text-2xl font-bold ">Featured Cars</h2>
             <Button variant="ghost" className="flex items-center" asChild>
               <Link href="/cars">
                 View All <ChevronRight className="ml-1 h-4 w-4" />
@@ -55,7 +55,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="py-12  mx-20 bg-gray-50">
+      <section className="py-12  mx-10 sm:mx-20 bg-gray-50">
         <div className="container mx-auto px-4 ">
           <div className="flex items-center justify-between  mb-8">
             <h2 className="text-2xl font-bold">Browse By Make</h2>
