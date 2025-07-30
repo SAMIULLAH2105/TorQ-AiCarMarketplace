@@ -268,6 +268,12 @@ export async function getCarById(carId) {
         where: { clerkUserId: userId },
       });
     }
+    if (!userId){
+      return{
+        success: false,
+        error: "Login to view car details",
+      }
+    }
 
     // Get car details
     const car = await db.car.findUnique({

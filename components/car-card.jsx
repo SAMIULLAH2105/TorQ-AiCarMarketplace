@@ -101,7 +101,6 @@ const CarCard = ({ car }) => {
 
           <span className="text-xl text-blue-600 font-bold">
             PKR {(car.price / 100000).toFixed(2)} lacs
-
           </span>
         </div>
 
@@ -131,8 +130,9 @@ const CarCard = ({ car }) => {
             onClick={() => {
               router.push(`/cars/${car.id}`);
             }}
+            disabled={!isSignedIn}
           >
-            View Car
+            {isSignedIn ? "View Car" : "Login to View"}
           </Button>
         </div>
       </CardContent>

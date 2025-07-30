@@ -15,6 +15,7 @@ import { SignedOut } from "@clerk/nextjs";
 import { getFeaturedCars } from "@/actions/home";
 
 export default async function Home() {
+  
   const featuredCars = await getFeaturedCars();
 
   return (
@@ -80,7 +81,7 @@ export default async function Home() {
                       src={make.image}
                       alt={make.name}
                       fill
-                      // className="object-cover group-hover:scale-105 transition duration-300"
+                      className="object-cover group-hover:scale-105 transition duration-300"
                       style={{ objectFit: "contain" }}
                     />
 
