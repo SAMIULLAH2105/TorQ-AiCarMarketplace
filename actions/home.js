@@ -5,6 +5,7 @@ import { db } from "@/lib/prisma";
 import aj from "@/lib/arcjet";
 import { request } from "@arcjet/next";
 import { serializeCarData } from "@/lib/helper";
+import { auth } from "@clerk/nextjs/server";
 
 
 
@@ -13,6 +14,16 @@ import { serializeCarData } from "@/lib/helper";
  */
 export async function getFeaturedCars(limit = 3) {
   try {
+    // Get current user if authenticated
+    const { userId } = await auth();
+    let dbUser = null;
+
+    if (userId) {
+      dbUser = await db.user.findUnique({
+        where: { clerkUserId: userId },
+      });
+    }
+
     const cars = await db.car.findMany({
       where: {
         featured: true,
@@ -22,7 +33,21 @@ export async function getFeaturedCars(limit = 3) {
       orderBy: { createdAt: "desc" },
     });
 
-    return cars.map(serializeCarData);
+    // If we have a user, check which cars are wishlisted
+    let wishlisted = new Set();
+    if (dbUser) {
+      const savedCars = await db.userSavedCar.findMany({
+        where: { userId: dbUser.id },
+        select: { carId: true },
+      });
+
+      wishlisted = new Set(savedCars.map((saved) => saved.carId));
+    }
+
+    // Serialize and check wishlist status
+    return cars.map((car) =>
+      serializeCarData(car, wishlisted.has(car.id))
+    );
   } catch (error) {
     throw new Error("Error fetching featured cars:" + error.message);
   }
