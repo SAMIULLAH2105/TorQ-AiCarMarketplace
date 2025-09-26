@@ -13,7 +13,8 @@ import {
 } from "@/components/ui/accordion";
 import { SignedOut } from "@clerk/nextjs";
 import { getFeaturedCars } from "@/actions/home";
-export const dynamic = "force-dynamic";
+
+export const dynamic = 'force-dynamic';
 
 export default async function Home() {
   

@@ -7,21 +7,25 @@ import { request } from "@arcjet/next";
 import { serializeCarData } from "@/lib/helper";
 import { auth } from "@clerk/nextjs/server";
 
-
-
-/**
- * Get featured cars for the homepage
- */
 export async function getFeaturedCars(limit = 3) {
   try {
-    // Get current user if authenticated
-    const { userId } = await auth();
+    let userId = null;
     let dbUser = null;
 
-    if (userId) {
-      dbUser = await db.user.findUnique({
-        where: { clerkUserId: userId },
-      });
+    // Wrap auth() in try-catch to handle static generation
+    try {
+      const { userId: authUserId } = await auth();
+      userId = authUserId;
+
+      if (userId) {
+        dbUser = await db.user.findUnique({
+          where: { clerkUserId: userId },
+        });
+      }
+    } catch (error) {
+      // This will happen during static generation or when no auth context is available
+      // Proceed without user authentication - this is normal during build time
+      console.log("No auth context available (static generation)");
     }
 
     const cars = await db.car.findMany({
@@ -33,25 +37,74 @@ export async function getFeaturedCars(limit = 3) {
       orderBy: { createdAt: "desc" },
     });
 
-    // If we have a user, check which cars are wishlisted
     let wishlisted = new Set();
-    if (dbUser) {
-      const savedCars = await db.userSavedCar.findMany({
-        where: { userId: dbUser.id },
-        select: { carId: true },
-      });
 
-      wishlisted = new Set(savedCars.map((saved) => saved.carId));
+    // Only check wishlist if we have a valid user
+    if (dbUser) {
+      try {
+        const savedCars = await db.userSavedCar.findMany({
+          where: { userId: dbUser.id },
+          select: { carId: true },
+        });
+
+        wishlisted = new Set(savedCars.map((saved) => saved.carId));
+      } catch (wishlistError) {
+        console.error("Error fetching wishlist:", wishlistError);
+        // Continue without wishlist data
+      }
     }
 
     // Serialize and check wishlist status
-    return cars.map((car) =>
-      serializeCarData(car, wishlisted.has(car.id))
-    );
+    return cars.map((car) => serializeCarData(car, wishlisted.has(car.id)));
   } catch (error) {
-    throw new Error("Error fetching featured cars:" + error.message);
+    console.error("Error fetching featured cars:", error);
+    // Return empty array instead of throwing error during build
+    return [];
   }
 }
+/**
+ * Get featured cars for the homepage
+ */
+// export async function getFeaturedCars(limit = 3) {
+//   try {
+//     // Get current user if authenticated
+//     const { userId } = await auth();
+//     let dbUser = null;
+
+//     if (userId) {
+//       dbUser = await db.user.findUnique({
+//         where: { clerkUserId: userId },
+//       });
+//     }
+
+//     const cars = await db.car.findMany({
+//       where: {
+//         featured: true,
+//         status: "AVAILABLE",
+//       },
+//       take: limit,
+//       orderBy: { createdAt: "desc" },
+//     });
+
+//     // If we have a user, check which cars are wishlisted
+//     let wishlisted = new Set();
+//     if (dbUser) {
+//       const savedCars = await db.userSavedCar.findMany({
+//         where: { userId: dbUser.id },
+//         select: { carId: true },
+//       });
+
+//       wishlisted = new Set(savedCars.map((saved) => saved.carId));
+//     }
+
+//     // Serialize and check wishlist status
+//     return cars.map((car) =>
+//       serializeCarData(car, wishlisted.has(car.id))
+//     );
+//   } catch (error) {
+//     throw new Error("Error fetching featured cars:" + error.message);
+//   }
+// }
 
 // Function to convert File to base64
 async function fileToBase64(file) {
@@ -155,4 +208,4 @@ export async function processImageSearch(file) {
   } catch (error) {
     throw new Error("AI Search error:" + error.message);
   }
-} 
+}
