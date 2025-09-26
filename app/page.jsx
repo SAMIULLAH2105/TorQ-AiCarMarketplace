@@ -14,10 +14,9 @@ import {
 import { SignedOut } from "@clerk/nextjs";
 import { getFeaturedCars } from "@/actions/home";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  
   const featuredCars = await getFeaturedCars();
 
   return (
@@ -35,7 +34,7 @@ export default async function Home() {
           </div>
 
           {/* Search */}
-          <HomeSearch  className="mx-5"/>
+          <HomeSearch className="mx-5" />
         </div>
       </section>
 
@@ -78,7 +77,6 @@ export default async function Home() {
                   className="bg-white rounded-lg shadow p-4 text-center hover:shadow-md transition cursor-pointer"
                 >
                   <div className="overflow-hidden rounded-lg flex justify-end h-28 mb-4 relative flex-col">
-                   
                     <Image
                       src={make.image}
                       alt={make.name}
