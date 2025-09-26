@@ -4,79 +4,20 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { db } from "@/lib/prisma";
 import aj from "@/lib/arcjet";
 import { request } from "@arcjet/next";
-import { serializeCarData } from "@/lib/helper";
-import { auth } from "@clerk/nextjs/server";
-
-export async function getFeaturedCars(limit = 3) {
-  try {
-    let userId = null;
-    let dbUser = null;
-
-    // Wrap auth() in try-catch to handle static generation
-    try {
-      const { userId: authUserId } = await auth();
-      userId = authUserId;
-
-      if (userId) {
-        dbUser = await db.user.findUnique({
-          where: { clerkUserId: userId },
-        });
-      }
-    } catch (error) {
-      // This will happen during static generation or when no auth context is available
-      // Proceed without user authentication - this is normal during build time
-      console.log("No auth context available (static generation)");
-    }
-
-    const cars = await db.car.findMany({
-      where: {
-        featured: true,
-        status: "AVAILABLE",
-      },
-      take: limit,
-      orderBy: { createdAt: "desc" },
-    });
-
-    let wishlisted = new Set();
-
-    // Only check wishlist if we have a valid user
-    if (dbUser) {
-      try {
-        const savedCars = await db.userSavedCar.findMany({
-          where: { userId: dbUser.id },
-          select: { carId: true },
-        });
-
-        wishlisted = new Set(savedCars.map((saved) => saved.carId));
-      } catch (wishlistError) {
-        console.error("Error fetching wishlist:", wishlistError);
-        // Continue without wishlist data
-      }
-    }
-
-    // Serialize and check wishlist status
-    return cars.map((car) => serializeCarData(car, wishlisted.has(car.id)));
-  } catch (error) {
-    console.error("Error fetching featured cars:", error);
-    // Return empty array instead of throwing error during build
-    return [];
-  }
+// import { serializeCarData } from "@/lib/helper";
+// Function to serialize car data
+function serializeCarData(car) {
+  return {
+    ...car,
+    price: car.price ? parseFloat(car.price.toString()) : 0,
+    createdAt: car.createdAt?.toISOString(),
+    updatedAt: car.updatedAt?.toISOString(),
+  };
 }
-/**
- * Get featured cars for the homepage
- */
+// Removed auth import to avoid using headers() during build/prerender
+
 // export async function getFeaturedCars(limit = 3) {
 //   try {
-//     // Get current user if authenticated
-//     const { userId } = await auth();
-//     let dbUser = null;
-
-//     if (userId) {
-//       dbUser = await db.user.findUnique({
-//         where: { clerkUserId: userId },
-//       });
-//     }
-
 //     const cars = await db.car.findMany({
 //       where: {
 //         featured: true,
@@ -86,25 +27,33 @@ export async function getFeaturedCars(limit = 3) {
 //       orderBy: { createdAt: "desc" },
 //     });
 
-//     // If we have a user, check which cars are wishlisted
-//     let wishlisted = new Set();
-//     if (dbUser) {
-//       const savedCars = await db.userSavedCar.findMany({
-//         where: { userId: dbUser.id },
-//         select: { carId: true },
-//       });
-
-//       wishlisted = new Set(savedCars.map((saved) => saved.carId));
-//     }
-
-//     // Serialize and check wishlist status
-//     return cars.map((car) =>
-//       serializeCarData(car, wishlisted.has(car.id))
-//     );
+//     // During prerender/build we should not access user/session headers.
+//     // Return cars with wishlist flag set to false; client-side or dynamic routes can enrich later.
+//     return cars.map((car) => serializeCarData(car, false));
 //   } catch (error) {
-//     throw new Error("Error fetching featured cars:" + error.message);
+//     console.error("Error fetching featured cars:", error);
+//     return [];
 //   }
 // }
+/**
+ * Get featured cars for the homepage
+ */
+export async function getFeaturedCars(limit = 3) {
+  try {
+    const cars = await db.car.findMany({
+      where: {
+        featured: true,
+        status: "AVAILABLE",
+      },
+      take: limit,
+      orderBy: { createdAt: "desc" },
+    });
+
+    return cars.map(serializeCarData);
+  } catch (error) {
+    throw new Error("Error fetching featured cars:" + error.message);
+  }
+}
 
 // Function to convert File to base64
 async function fileToBase64(file) {

@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { bodyTypes, carMakes, faqItems } from "@/lib/data";
 import { ChevronRight, Car, Shield, Calendar } from "lucide-react";
 import CarCard from "@/components/car-card";
+import FeaturedCarsClient from "@/components/featured-cars-client";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -49,11 +50,7 @@ export default async function Home() {
             </Button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
-            {featuredCars.map((car) => {
-              return <CarCard key={car.id} car={car} />;
-            })}
-          </div>
+          <FeaturedCarsClient cars={featuredCars} />
         </div>
       </section>
 

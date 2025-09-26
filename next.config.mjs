@@ -27,7 +27,7 @@ const nextConfig = {
         headers: [
           {
             key: "Content-Security-Policy",
-            value: "frame-src 'seft' https://vehiql-mywaitlist.created.app; ",
+            value: "frame-src 'self' https://vehiql-mywaitlist.created.app;",
           },
         ],
       },
