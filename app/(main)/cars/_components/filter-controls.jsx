@@ -45,6 +45,15 @@ export const CarFilterControls = ({
       onChange: (value) => onFilterChange("transmission", value),
     },
   ];
+  function formatPrice(price) {
+    if (price >= 10000000) {
+      return `PKR ${(price / 10000000).toFixed(2)} Cr`;
+    } else if (price >= 100000) {
+      return `PKR ${(price / 100000).toFixed(2)} lacs`;
+    } else {
+      return `PKR ${price.toLocaleString()}`;
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -62,10 +71,11 @@ export const CarFilterControls = ({
         </div>
         <div className="flex items-center justify-between">
           <div className="font-medium text-sm">
-            {" "}
-            PKR {(priceRange[0] / 100000).toFixed(2)} lacs
+            {formatPrice(priceRange[0])}
           </div>
-          <div className="font-medium text-sm">PKR {(priceRange[1]/100000).toFixed(2)} lacs</div>
+          <div className="font-medium text-sm">
+            {formatPrice(priceRange[1])}
+          </div>
         </div>
       </div>
 

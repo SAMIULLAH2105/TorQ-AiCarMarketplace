@@ -57,6 +57,18 @@ const CarCard = ({ car }) => {
     // Call the toggleSavedCar function using our useFetch hook
     await toggleSavedCarFn(car.id);
   };
+  function formatPrice(price) {
+    if (price >= 10000000) {
+      // Convert to Crore
+      return `PKR ${(price / 10000000).toFixed(2)} Cr`;
+    } else if (price >= 100000) {
+      // Convert to Lacs
+      return `PKR ${(price / 100000).toFixed(2)} lacs`;
+    } else {
+      // Less than 1 lac
+      return `PKR ${price.toLocaleString()}`;
+    }
+  }
 
   return (
     <Card className="overflow-hidden hover:shadow-lg transition group py-0">
@@ -100,7 +112,7 @@ const CarCard = ({ car }) => {
           </h3>
 
           <span className="text-xl text-blue-600 font-bold">
-            PKR {(car.price / 100000).toFixed(2)} lacs
+            {formatPrice(car.price)}
           </span>
         </div>
 
@@ -125,7 +137,7 @@ const CarCard = ({ car }) => {
         </div>
 
         <div className="flex justify-between">
-          <Button
+          {/* <Button
             className="flex-1"
             onClick={() => {
               router.push(`/cars/${car.id}`);
@@ -133,6 +145,18 @@ const CarCard = ({ car }) => {
             disabled={!isSignedIn}
           >
             {isSignedIn ? "View Car" : "Login to View"}
+          </Button> */}
+          <Button
+            className="flex-1"
+            onClick={() => {
+              if (isSignedIn) {
+                router.push(`/cars/${car.id}`); // go to car details
+              } else {
+                router.push("/sign-in"); // redirect to login page
+              }
+            }}
+          >
+            {isSignedIn ? "View Car" : "Sign In to View"}
           </Button>
         </div>
       </CardContent>

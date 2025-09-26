@@ -82,7 +82,7 @@ export default async function Home() {
                       style={{ objectFit: "contain" }}
                     />
 
-                    <h3 className="font-medium">{make.name}</h3>
+                    {/* <h3 className="font-medium">{make.name}</h3> */}
                   </div>
 
                   {/* <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent rounded-lg flex items-end">
