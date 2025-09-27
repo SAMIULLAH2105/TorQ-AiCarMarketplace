@@ -26,7 +26,7 @@ const HomeSearch = () => {
     error: processError,
   } = useFetch(processImageSearch);
 
-  // // Handle process result and errors with useEffect
+  //  Handle process result and errors with useEffect
   useEffect(() => {
     if (processResult?.success) {
       const params = new URLSearchParams();
@@ -189,7 +189,6 @@ const HomeSearch = () => {
               )}
             </div>
 
-           
             {imagePreview && (
               <Button
                 type="submit"

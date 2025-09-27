@@ -2,6 +2,9 @@
 const nextConfig = {
   experimental: {
     serverComponentsHmrCache: false,
+    serverActions: {
+      bodySizeLimit: "5mb", // Increase to 5 MB (adjust as needed)
+    },
   },
   images: {
     remotePatterns: [
@@ -11,7 +14,7 @@ const nextConfig = {
       },
     ],
   },
-  
+
   // Add this to fix the ESLint build error
   eslint: {
     ignoreDuringBuilds: true,
@@ -19,7 +22,7 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-    
+
   async headers() {
     return [
       {

@@ -11,8 +11,6 @@ import { auth } from "@clerk/nextjs/server";
 
 // Function to convert File to base64
 async function fileToBase64(file) {
-  
-  
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
   return buffer.toString("base64");
@@ -28,13 +26,13 @@ export async function processCarImageWithAI(file) {
 
     // Initialize Gemini API
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
     // Convert image file to base64
     const base64Image = await fileToBase64(file);
 
     // Create image part for the model
-    const imagePart = { 
+    const imagePart = {
       inlineData: {
         data: base64Image,
         mimeType: file.type,
@@ -227,7 +225,7 @@ export async function addCar({ carData, images }) {
 }
 
 // Fetch all cars with simple search
-export async function getCars(search = "") {  
+export async function getCars(search = "") {
   try {
     // Build where conditions
     let where = {};
@@ -263,7 +261,7 @@ export async function getCars(search = "") {
 }
 
 // Delete a car by ID
-export async function deleteCar(id) { 
+export async function deleteCar(id) {
   try {
     const { userId } = await auth();
     if (!userId) throw new Error("Unauthorized");
