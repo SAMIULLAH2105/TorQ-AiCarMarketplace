@@ -117,10 +117,10 @@ const HomeSearch = () => {
           <Search className="absolute left-3 w-5 h-5" />
           <Input
             type="text"
-            placeholder="Enter make, model, or use our AI Image Search..."
+            placeholder="Search by text or AI Image…"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10 pr-12 py-6 w-full rounded-full border-gray-300 bg-white/95 backdrop-blur-sm text-[10px]"
+            className="pl-10 pr-28 py-6 w-full rounded-full border-gray-300 bg-white/95 backdrop-blur-sm text-[10px] "
           />
 
           {/* Image Search Button */}
@@ -128,7 +128,7 @@ const HomeSearch = () => {
             <Camera
               size={35}
               onClick={() => setIsImageSearchActive(!isImageSearchActive)}
-              className="cursor-pointer rounded-xl p-1.5"
+              className="cursor-pointer rounded-xl pr-0 p-1.5"
               style={{
                 background: isImageSearchActive ? "black" : "",
                 color: isImageSearchActive ? "white" : "",

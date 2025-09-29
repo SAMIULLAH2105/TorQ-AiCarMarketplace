@@ -141,7 +141,7 @@ export default async function Home() {
       </section>
 
       {/* BROWSE BY BODY TYPE */}
-      <section className="py-12  mx-20 bg-gray-50">
+      <section className="py-12  mx-10 bg-gray-50">
         <div className="container mx-auto px-4 ">
           <div className="flex items-center justify-between  mb-8">
             <h2 className="text-2xl font-bold">Browse By Body Type</h2>
@@ -152,7 +152,7 @@ export default async function Home() {
             </Button>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4  gap-4 ">
+          <div className="grid grid-cols-1 md:grid-cols-4  gap-4 ">
             {bodyTypes.map((type) => {
               return (
                 <Link
