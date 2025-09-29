@@ -36,7 +36,7 @@ export default function RootLayout({ children }) {
             </div>
 
             <div className="container mx-auto py-4 text-center text-gray-200">
-              <p className="">© 2023 AICar Marketplace. All rights reserved.</p>
+              <p className="">© 2025 AICar Marketplace. All rights reserved.</p>
             </div>
           </footer>
         </body>
